@@ -17,4 +17,5 @@ def home():
                          name=g.user)
 
 if __name__ == '__main__':
+  'This is main function.'
   manager.run()
