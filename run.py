@@ -1,4 +1,4 @@
-from flask import Flask, render_template, g, abort
+from flask import Flask, render_template, g, abort, request
 from flask_script import Manager
 
 
