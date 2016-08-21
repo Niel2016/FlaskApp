@@ -8,12 +8,14 @@ from flask_moment import Moment
 from flask_wtf import Form
 from wtforms import StringField, SubmitField
 from wtforms.validators import Required
+from flask_sqlalchemy import SQLAlchemy
 
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
 manager = Manager(app)
 moment = Moment(app)
+db = SQLAlchemy(app)
 
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'HARD TO GUESS'
