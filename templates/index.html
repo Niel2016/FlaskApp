@@ -12,6 +12,7 @@
 		{% else %}
 			<h1>Hello, Stranger!</h1>
 		{% endif %}
+		{%if not known%} Pleased to meet you!{%else%}Happy to see you again!{%endif%}
 	</div>
 	{{ wtf.quick_form(form) }}
 	<hr>
