@@ -16,7 +16,7 @@ class DevelopmentConfig(BasicConfig):
     MAIL_SERVER = 'tpma2001.wistronits.com'
     MAIL_PORT = 465
     MAIL_USE_SSL = True
-    MAIL_USERNAME = 'ZH0607010'
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
 
