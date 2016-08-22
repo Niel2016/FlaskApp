@@ -10,6 +10,7 @@ from flask_wtf import Form
 from wtforms import StringField, SubmitField
 from wtforms.validators import Required
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate, MigrateCommand
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -26,10 +27,13 @@ bootstrap = Bootstrap(app)
 manager = Manager(app)
 moment = Moment(app)
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
 
 def make_shell_context():
   return dict(db=db, app=app, User=User, Role=Role)
 manager.add_command('shell', Shell(make_context=make_shell_context))
+manager.add_command('db', MigrateCommand)
 
 #------------------------------------request hooks---------------------------
 # @app.before_request
@@ -41,6 +45,7 @@ class User(db.Model):
   __tablename__ = 'users'
   id = db.Column(db.Integer, primary_key=True)
   username = db.Column(db.String(64), unique=True, index=True)
+  email = db.Column(db.String(128))
   role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
   def __repr__(self):
