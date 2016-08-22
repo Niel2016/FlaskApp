@@ -11,6 +11,7 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import Required
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, MigrateCommand
+from flask_mail import Mail, Message
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -22,18 +23,30 @@ app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'HARD TO GUESS'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir,
                                                                     'data.sqlite')
+app.config['MAIL_SERVER'] = 'tpma2001.wistronits.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_USERNAME'] = 'ZH0607010'
+app.config['MAIL_PASSWORD'] = 'Yang20160521'
 #----------------------------------------------------------------------------
 bootstrap = Bootstrap(app)
 manager = Manager(app)
 moment = Moment(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+mail = Mail(app)
 
 
 def make_shell_context():
   return dict(db=db, app=app, User=User, Role=Role)
 manager.add_command('shell', Shell(make_context=make_shell_context))
 manager.add_command('db', MigrateCommand)
+
+def send_mail(to, subject, template, **kwargs):
+  msg = Message(subject, sender='christianyang@wistronits.com', recipients=[to])
+  msg.body = render_template(template + '.txt', **kwargs)
+  msg.html = render_template(template + '.html', **kwargs)
+  mail.send(msg)
 
 #------------------------------------request hooks---------------------------
 # @app.before_request
@@ -86,6 +99,7 @@ def home():
           db.session.add(user)
           db.session.commit()
           session['known'] = False
+          send_mail('christianyang@wistronits.com', 'New User', 'mail/new_user', user=user)
         else:
           session['known'] = True
         session['name'] = form.name.data
