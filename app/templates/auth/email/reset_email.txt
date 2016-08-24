@@ -1,0 +1,15 @@
+Dear {{ user.username }},
+
+To reset your email click here.
+
+Alternatively, you can paste the following link in your browser's address bar:
+
+{{ url_for('auth.reset_email', token=token, _external=True) }}
+
+If you have not requested a email reset simply ignore this message.
+
+Sincerely,
+
+The Flasky Team
+
+Note: replies to this email address are not monitored.

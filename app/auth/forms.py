@@ -3,6 +3,8 @@ from wtforms import StringField, SubmitField, PasswordField, BooleanField, Valid
 from wtforms.validators import Required, Email, Length, Regexp, EqualTo
 from ..models import User
 
+
+
 class LoginForm(Form):
 
     email = StringField('Email', validators=[Email(), Length(1, 64), Required()])
@@ -28,3 +30,29 @@ class RegistrationForm(Form):
     def validate_username(self, field):
         if User.query.filter_by(username=field.data).first():
             raise ValidationError('Username already in use.')
+
+class ChangePasswordForm(Form):
+
+    oldPassword = PasswordField('Old Password', validators=[Required()])
+    password = PasswordField('New Password', validators=[Required(), EqualTo('password2', message='Passwords must match.')])
+    password2 = PasswordField('Confirm password', validators=[Required()])
+    submit = SubmitField('Change Password')
+
+class ChangeEmailRequestForm(Form):
+    
+    email = StringField('New email', validators=[Email(), Length(1, 64), Required()])
+    password = PasswordField('Password', validators=[Required()])
+    submit = SubmitField('Update Email Address')
+
+class ResetPasswordRequestForm(Form):
+
+    email = StringField('Email', validators=[Email(), Length(1, 64), Required()])
+    submit = SubmitField('Reset Password')
+
+class ResetPasswordForm(Form):
+
+    email = StringField('Email', validators=[Email(), Length(1, 64), Required()])
+    password = PasswordField('New Password', validators=[Required(), EqualTo('password2', message='Passwords must match.')])
+    password2 = PasswordField('Confirm password', validators=[Required()])
+    submit = SubmitField('Reset Password')
+
