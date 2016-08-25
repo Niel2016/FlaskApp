@@ -5,6 +5,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class BasicConfig():
 
     SECRET_KEY = 'HARD TO GUESS'
+    FLASK_ADMIN = 'christianyang@wistronits.com'
 
     @staticmethod
     def init_app(app):
