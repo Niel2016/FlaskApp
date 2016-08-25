@@ -2,9 +2,10 @@ from datetime import datetime
 from flask import render_template, redirect, url_for, session
 from . import main
 from .. import db
-from .forms import NameForm
+from .forms import NameForm, EditProfileForm
 from ..models import User, Role
 from ..email import send_mail
+from flask_login import current_user
 
 
 @main.route('/', methods=['GET', 'POST'])
@@ -28,3 +29,11 @@ def home():
                            form=form,
                            known=session.get('known', False),
                            current_time=datetime.utcnow())
+
+@main.route('/user/<username>')
+def user(username):
+  user = User.query.filter_by(username=username).first()
+  if user is None:
+    abort(404)
+  return render_template('user.html', user=user)
+
