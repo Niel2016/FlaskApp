@@ -6,7 +6,7 @@
 	
 {% block page_content %}
 <div class="page-header">
-	<img class="img-rounded profile-thumbnail" src="{{ url_for('static', filename='profile.jpg') }}">
+	<img class="img-rounded profile-thumbnail" height=200px width=200px src="{{ url_for('static', filename='profile.jpg') }}">
 	<div class="profile-header">
 		<h1>{{ user.username }}</h1>
 		{% if user.name or user.location %} 
@@ -19,7 +19,7 @@
 			{% endif %}
 		</p>
 		{% endif %}
-		
+		<p></p>
 		{% if current_user.is_administrator() %}
 			<p><a href="mailto:{{ user.email }}">{{ user.email }}</a></p> 
 		{% endif %}
@@ -40,5 +40,12 @@
 		{% endif %}
 	</div>
 </div>
+<h3>Posts by {{ user.username }}</h3>
+{% include '_posts.html' %}
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, '.user', username=user.username) }}
+</div>
+{% endif %}
 {% endblock %}
 

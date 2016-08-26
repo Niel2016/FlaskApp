@@ -6,6 +6,7 @@ class BasicConfig():
 
     SECRET_KEY = 'HARD TO GUESS'
     FLASK_ADMIN = 'christianyang@wistronits.com'
+    FLASKY_POSTS_PER_PAGE = 25
 
     @staticmethod
     def init_app(app):

@@ -1,33 +1,31 @@
 from datetime import datetime
-from flask import render_template, redirect, url_for, session, flash
+from flask import render_template, redirect, url_for, session, flash, request, current_app
 from . import main
 from .. import db
-from .forms import NameForm, EditProfileForm, EditProfileAdminForm
-from ..models import User, Role
+from .forms import NameForm, EditProfileForm, EditProfileAdminForm, PostForm
+from ..models import User, Role, Post, Permissions
 from ..email import send_mail
 from flask_login import current_user, login_required
 
 
 @main.route('/', methods=['GET', 'POST'])
 def home():
-    form = NameForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.name.data).first()
-        if user is None:
-          user = User(username=form.name.data)
-          db.session.add(user)
-          db.session.commit()
-          session['known'] = False
-          send_mail('christianyang@wistronits.com', 'New User', 'mail/new_user', user=user)
-        else:
-          session['known'] = True
-        session['name'] = form.name.data
-        form.name.data = ''
+    form = PostForm()
+    if form.validate_on_submit() and current_user.can(Permissions.WRITE_ARTICLES):
+        post = Post(body=form.body.data, author=current_user._get_current_object())
+        db.session.add(post)
+        db.session.commit()
         return redirect(url_for('main.home'))
+    page = request.args.get('page', 1, type=int)
+    pagination = Post.query.order_by(Post.timestamp.desc()).paginate(
+                 page, 
+                 per_page=current_app.config['FLASKY_POSTS_PER_PAGE'],
+                 error_out=False)
+    posts = pagination.items
     return render_template('index.html',
-                           username=session.get('name'),
                            form=form,
-                           known=session.get('known', False),
+                           posts=posts,
+                           pagination=pagination,
                            current_time=datetime.utcnow())
 
 @main.route('/user/<username>')
@@ -35,7 +33,8 @@ def user(username):
   user = User.query.filter_by(username=username).first()
   if user is None:
     abort(404)
-  return render_template('user.html', user=user)
+  posts = user.posts.order_by(Post.timestamp.desc()).all()
+  return render_template('user.html', user=user, posts=posts)
 
 @main.route('/edit-profile', methods=['GET', 'POST'])
 @login_required
