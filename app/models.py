@@ -35,7 +35,7 @@ class User(UserMixin, db.Model):
     if self.role is None:
       if self.email == current_app.config['FLASK_ADMIN']:
         self.role = Role.query.filter_by(permissions=0xff).first()
-      else:
+      if self.role is None:
         self.role = Role.query.filter_by(default=True).first()
 
   def can(self, permissions):
