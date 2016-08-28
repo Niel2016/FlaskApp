@@ -8,10 +8,14 @@ app = create_app('default')
 manager = Manager(app)
 migrate = Migrate(app, db)
 
+
 def make_shell_context():
-  return dict(db=db, app=app, User=User, Role=Role, Permissions=Permissions, Post=Post)
+    return dict(
+        db=db, app=app, User=User,
+        Role=Role, Permissions=Permissions, Post=Post)
 manager.add_command('shell', Shell(make_context=make_shell_context))
 manager.add_command('db', MigrateCommand)
+
 
 @manager.command
 def test():
@@ -19,11 +23,5 @@ def test():
     tests = unittest.TestLoader().discover('tests')
     unittest.TextTestRunner(verbosity=2).run(tests)
 
-#------------------------------------request hooks---------------------------
-# @app.before_request
-# def before_first_request():
-#     g.user = 'Nielss'
-
 if __name__ == '__main__':
     manager.run()
-

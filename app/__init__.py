@@ -1,15 +1,11 @@
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate, MigrateCommand
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
-from flask import Flask, flash
-from flask import session, redirect, url_for
-from flask_mail import Mail, Message
+from flask import Flask
+from flask_mail import Mail
 from flask_login import LoginManager
 from flask_pagedown import PageDown
 from config import config
-
-
 
 
 bootstrap = Bootstrap()
@@ -20,6 +16,7 @@ pagedown = PageDown()
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
+
 
 def create_app(config_name):
 
@@ -41,4 +38,3 @@ def create_app(config_name):
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
     return app
-

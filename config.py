@@ -2,6 +2,7 @@ import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+
 class BasicConfig():
 
     SECRET_KEY = 'HARD TO GUESS'
@@ -12,6 +13,7 @@ class BasicConfig():
     def init_app(app):
         pass
 
+
 class DevelopmentConfig(BasicConfig):
 
     DEBUG = True
@@ -20,21 +22,25 @@ class DevelopmentConfig(BasicConfig):
     MAIL_USE_SSL = True
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' +\
+        os.path.join(basedir, 'data-dev.sqlite')
+
 
 class TestingConfig(BasicConfig):
 
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' +\
+        os.path.join(basedir, 'data-test.sqlite')
+
 
 class ProductionConfig(BasicConfig):
 
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' +\
+        os.path.join(basedir, 'data.sqlite')
 
 config = {
-
-        "development": DevelopmentConfig,
-        "testing": TestingConfig,
-        'production': ProductionConfig,
-        "default": DevelopmentConfig
-    }
+    "development": DevelopmentConfig,
+    "testing": TestingConfig,
+    'production': ProductionConfig,
+    "default": DevelopmentConfig
+}
